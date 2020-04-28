@@ -4,10 +4,10 @@
 
 start /b mapshaper ^
 -i %1 ^
--each "computed = name + '_' + natLevName + '_' + natcode" ^
+-each "type = { 'Oras': 'oras', 'Comuna': 'comuna', 'Municipiu, altul decat resedinta de judet': 'municipiu', 'Municipiu resedinta de judet': 'municipiu resedinta', 'Sectoarele municipiului Bucuresti': 'sector'}[natLevName]" ^
 -proj EPSG:3844 ^
 -style fill=none stroke="#aaa" ^
--o id-field=computed format=svg - ^
+-o svg-data=name,type id-field=natcode format=svg - ^
 | svgo ^
 -i - ^
 --pretty ^

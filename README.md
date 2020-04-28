@@ -43,10 +43,10 @@ mapshaper ro_uat_poligon.geojson name="" -simplify 0.009 -split countyMn -o form
 
 start /b mapshaper ^
 -i %1 ^
--each "computed = name + '_' + natLevName + '_' + natcode" ^
+-each "type = { 'Oras': 'oras', 'Comuna': 'comuna', 'Municipiu, altul decat resedinta de judet': 'municipiu', 'Municipiu resedinta de judet': 'municipiu resedinta', 'Sectoarele municipiului Bucuresti': 'sector'}[natLevName]" ^
 -proj EPSG:3844 ^
 -style fill=none stroke="#aaa" ^
--o id-field=computed format=svg - ^
+-o svg-data=name,type id-field=natcode format=svg - ^
 | svgo ^
 -i - ^
 --pretty ^
@@ -64,23 +64,28 @@ if NOT x%1==x goto start
 ✓ Fiecare UAT e un `<path>`;  
 ✓ Un singur grup `<g>` top-level  
 ✓ Fără lufturi / margini  
-✓ SIRUTA: `natcode` = Codul SIRUTA al unitații administrative  
+✓ SIRUTA: `id="7767"` natcode = Codul SIRUTA al unitații administrative  
+✓ Nume localitate: `data-name="Stremț"`  
+✓ Tip localitatate: `class="comuna"`  
 ✓ Responsiv: SVGO `removeDimensions`  
 
 ### Metadate adiționale
 
-Exportul are un atribut `id` compus din mai multe dimensiuni. 
-Pentru despărțit în mai multe atribute find & replace:
+Pentru selecție mai rapidă înlocuim în toate SVG-urile după export `data-type` → `class`
 
-Find `(?:id=")(.+)_(.+)_(\d+)"`
-Replace `data-name="\1" class="\2" id="\3"`
-
+```xml
+<path d="M519.349..." id="7767" data-name="Stremț" class="comuna"/>
 ```
-Oras → oras
-Comuna → comuna
-Muncipiu, altul decat resedinta de judet → municipiu
-Municipiu resedinta de judet → municipiu resedinta
-Sectoarele municipiului Bucuresti → sector
+
+```js
+// natLevName mappings
+type = {
+  'Oras': 'oras',
+  'Comuna': 'comuna',
+  'Municipiu, altul decat resedinta de judet': 'municipiu',
+  'Municipiu resedinta de judet': 'municipiu resedinta',
+  'Sectoarele municipiului Bucuresti': 'sector'
+}[natLevName]
 ```
 
 ## Extra
@@ -98,20 +103,22 @@ Proiecții:
 - ✗ **UTM** apare rotit
 - ✗ **wgs84** apare lat
 
+Reference: [Export topojson from Mapshaper with an ID field that is a composite created from multiple fields - Geographic Information Systems Stack Exchange](https://gis.stackexchange.com/questions/233438/export-topojson-from-mapshaper-with-an-id-field-that-is-a-composite-created-from)
+
 Tutorial: [Elections Data – Spatial Perspectives in QGIS 3.8.3 – Map The Clouds](https://blog.maptheclouds.com/tutorials/spatial-perspective-elections)
 
 ## TODO
 
 - [ ] NodeJS script instead of batch script
-- [ ] `<path>` add name. 
 - [ ] `<g>` add property `region`?
 - [ ] `curl` the source file from geo-spatial.org?
 
 <!-- 
 ```css
-.comuna { fill: #eee }
+.comuna { fill: aliceblue }
 .oras { fill: hotpink }
 .municipiu { fill: rebeccapurple }
-.resedinta { fill: red; }
+.resedinta { fill: red }
+.sector { fill: bisque }
 ```
 -->
