@@ -43,9 +43,10 @@ mapshaper ro_uat_poligon.geojson name="" -simplify 0.009 -split countyMn -o form
 
 start /b mapshaper ^
 -i %1 ^
+-each "computed = name + '_' + natLevName + '_' + natcode" ^
 -proj EPSG:3844 ^
 -style fill=none stroke="#aaa" ^
--o id-field="natcode" format=svg - ^
+-o id-field=computed format=svg - ^
 | svgo ^
 -i - ^
 --pretty ^
@@ -66,6 +67,22 @@ if NOT x%1==x goto start
 ✓ SIRUTA: `natcode` = Codul SIRUTA al unitații administrative  
 ✓ Responsiv: SVGO `removeDimensions`  
 
+### Metadate adiționale
+
+Exportul are un atribut `id` compus din mai multe dimensiuni. 
+Pentru despărțit în mai multe atribute find & replace:
+
+Find `(?:id=")(.+)_(.+)_(\d+)"`
+Replace `data-name="\1" class="\2" id="\3"`
+
+```
+Oras → oras
+Comuna → comuna
+Muncipiu, altul decat resedinta de judet → municipiu
+Municipiu resedinta de judet → municipiu resedinta
+Sectoarele municipiului Bucuresti → sector
+```
+
 ## Extra
 
 Afișează proprietățile unui fișier GIS cu comanda: 
@@ -82,3 +99,19 @@ Proiecții:
 - ✗ **wgs84** apare lat
 
 Tutorial: [Elections Data – Spatial Perspectives in QGIS 3.8.3 – Map The Clouds](https://blog.maptheclouds.com/tutorials/spatial-perspective-elections)
+
+## TODO
+
+- [ ] NodeJS script instead of batch script
+- [ ] `<path>` add name. 
+- [ ] `<g>` add property `region`?
+- [ ] `curl` the source file from geo-spatial.org?
+
+<!-- 
+```css
+.comuna { fill: #eee }
+.oras { fill: hotpink }
+.municipiu { fill: rebeccapurple }
+.resedinta { fill: red; }
+```
+-->

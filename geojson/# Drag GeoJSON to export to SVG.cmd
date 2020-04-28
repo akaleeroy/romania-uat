@@ -4,9 +4,10 @@
 
 start /b mapshaper ^
 -i %1 ^
+-each "computed = name + '_' + natLevName + '_' + natcode" ^
 -proj EPSG:3844 ^
 -style fill=none stroke="#aaa" ^
--o id-field="natcode" format=svg - ^
+-o id-field=computed format=svg - ^
 | svgo ^
 -i - ^
 --pretty ^
