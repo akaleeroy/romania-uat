@@ -4,12 +4,11 @@
 
 De la @geospatialorg
 
-~~[geo-spatial.org - România - seturi de date vectoriale generale > Limitele unităților administrative din România](http://www.geo-spatial.org/download/romania-seturi-vectoriale#uat)~~
+~~[geo-spatial.org - România - seturi de date vectoriale generale > Limitele unităților administrative din România](http://www.geo-spatial.org/download/romania-seturi-vectoriale#uat "dead link")~~
 
-Fișier sursă ~~[**GeoJSON poligon 20.12.2019**](http://www.geo-spatial.org/file_download/29535)~~  
+Fișier sursă ~~[**GeoJSON poligon 20.12.2019**](http://www.geo-spatial.org/file_download/29535 "dead link")~~  
 <small>Size: 189 MB (198,546,274 bytes)</small>  
 <small>MD5 checksum: A04BAA4CDF93E93A169EF77EAE31469C</small>
-<small>Size (GZipped): 57.3 MB (60,088,360 bytes)</small>  
 
 ## Unelte
 
@@ -27,38 +26,32 @@ Fișier sursă ~~[**GeoJSON poligon 20.12.2019**](http://www.geo-spatial.org/fil
 
 ### Împărțire pe județe
 
-```bat
-mapshaper ro_uat_poligon.geojson name="" -simplify 0.009 -split countyMn -o format=geojson
+```sh
+cd src
+# Unzip
+gunzip --keep ro_uat_poligon.geojson.gz
+# Split by counties
+mapshaper ro_uat_poligon.geojson -simplify 0.009 -split countyMn -o ../uat/ format=geojson extension=geojson prettify
 ```
 
 ✓ Simplificare `9%` folosind algoritmul implicit `weighted Visalingam simplification`
 
-### Conversie SVG
+## Unități administrativ-teritoriale
 
-`geojson\# Drag GeoJSON to export to SVG.cmd` ↓
+![Limitele unităților administrativ-teritoriale din județul Alba](uat/svg/AB.svg)  
+[_drag-uat-geojson-to-svg.cmd](uat/_drag-uat-geojson-to-svg.cmd)
 
-```bat
-@echo off
+```xml
+<g id="AB" fill="none" stroke="#aaa">
+  <!-- ... -->
+  <path d="M519.349..." id="7767" data-name="Stremț" data-type="comuna"/>
+  <!-- ... -->
+```
 
-:start
+Pentru selecție mai rapidă înlocuim în toate SVG-urile după export `data-type` → `class`
 
-start /b mapshaper ^
--i %1 ^
--each "type = { 'Oras': 'oras', 'Comuna': 'comuna', 'Municipiu, altul decat resedinta de judet': 'municipiu', 'Municipiu resedinta de judet': 'municipiu resedinta', 'Sectoarele municipiului Bucuresti': 'sector'}[natLevName]" ^
--proj EPSG:3844 ^
--style fill=none stroke="#aaa" ^
--o svg-data=name,type id-field=natcode format=svg - ^
-| svgo ^
--i - ^
---pretty ^
---indent=2 ^
---disable=cleanupIDs ^
---enable=removeDimensions ^
--o "%~n1.svg"
-
-shift
-if NOT x%1==x goto start
-
+```xml
+<path d="M519.349..." id="7767" data-name="Stremț" class="comuna"/>
 ```
 
 ✓ Proiecție: `EPSG:3844` - Pulkovo 1942(58) / Stereo70 - Projected  
@@ -70,14 +63,6 @@ if NOT x%1==x goto start
 ✓ Tip localitatate: `class="comuna"`  
 ✓ Responsiv: SVGO `removeDimensions`  
 
-### Metadate adiționale
-
-Pentru selecție mai rapidă înlocuim în toate SVG-urile după export `data-type` → `class`
-
-```xml
-<path d="M519.349..." id="7767" data-name="Stremț" class="comuna"/>
-```
-
 ```js
 // natLevName mappings
 type = {
@@ -87,6 +72,33 @@ type = {
   'Municipiu resedinta de judet': 'municipiu resedinta',
   'Sectoarele municipiului Bucuresti': 'sector'
 }[natLevName]
+```
+
+## Județe
+
+![Limitele județelor din România](judete/ro-judete.svg)  
+[_drag-judete-geojson-to-svg.cmd](judete/_drag-judete-geojson-to-svg.cmd)
+
+```xml
+<g id="judete" fill="none" stroke="#aaa">
+  <path d="M216.353..." id="AB" data-name="Alba" data-countycode="10"/>
+  <!-- ... -->
+```
+
+## Regiuni
+
+```sh
+# Aggregate county geometries by the region field
+mapshaper ../judete/ro-judete.geojson -dissolve region copy-fields=regionid -o ro-regiuni.geojson
+```
+
+![Limitele regiunilor din România](regiuni/ro-regiuni.svg)  
+[_drag-regiuni-geojson-to-svg.cmd](regiuni/_drag-regiuni-geojson-to-svg.cmd)
+
+```xml
+<g id="regiuni" fill="none" stroke="#aaa">
+  <path d="M404.36..." id="Centru" data-regionid="7"/>
+  <!-- ... -->
 ```
 
 ## Extra
@@ -111,7 +123,8 @@ Tutorial: [Elections Data – Spatial Perspectives in QGIS 3.8.3 – Map The Clo
 ## TODO
 
 - [ ] NodeJS script instead of batch script
-- [ ] `<g>` add property `region`?
+    * [ ] `package.json` to install dependencies
+    * [ ] Unzip source with Zlib
 
 <!-- 
 ```css
