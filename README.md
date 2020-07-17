@@ -4,11 +4,12 @@
 
 De la @geospatialorg
 
-[geo-spatial.org - România - seturi de date vectoriale generale > Limitele unităților administrative din România](http://www.geo-spatial.org/download/romania-seturi-vectoriale#uat)
+~~[geo-spatial.org - România - seturi de date vectoriale generale > Limitele unităților administrative din România](http://www.geo-spatial.org/download/romania-seturi-vectoriale#uat)~~
 
-Descărcare [**GeoJSON poligon 20.12.2019**](http://www.geo-spatial.org/file_download/29535)  
+Fișier sursă ~~[**GeoJSON poligon 20.12.2019**](http://www.geo-spatial.org/file_download/29535)~~  
 <small>Size: 189 MB (198,546,274 bytes)</small>  
 <small>MD5 checksum: A04BAA4CDF93E93A169EF77EAE31469C</small>
+<small>Size (GZipped): 57.3 MB (60,088,360 bytes)</small>  
 
 ## Unelte
 
@@ -111,7 +112,6 @@ Tutorial: [Elections Data – Spatial Perspectives in QGIS 3.8.3 – Map The Clo
 
 - [ ] NodeJS script instead of batch script
 - [ ] `<g>` add property `region`?
-- [ ] `curl` the source file from geo-spatial.org?
 
 <!-- 
 ```css
