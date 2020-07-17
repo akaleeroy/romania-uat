@@ -7,8 +7,8 @@ De la @geospatialorg
 ~~[geo-spatial.org - România - seturi de date vectoriale generale > Limitele unităților administrative din România](http://www.geo-spatial.org/download/romania-seturi-vectoriale#uat "dead link")~~
 
 Fișier sursă ~~[**GeoJSON poligon 20.12.2019**](http://www.geo-spatial.org/file_download/29535 "dead link")~~  
-<small>Size: 189 MB (198,546,274 bytes)</small>  
-<small>MD5 checksum: A04BAA4CDF93E93A169EF77EAE31469C</small>
+Size: 189 MB (198,546,274 bytes)  
+MD5 checksum: A04BAA4CDF93E93A169EF77EAE31469C  
 
 ## Unelte
 
@@ -103,7 +103,7 @@ mapshaper ../judete/ro-judete.geojson -dissolve region copy-fields=regionid -o r
 
 ## Extra
 
-Afișează proprietățile unui fișier GIS cu comanda: 
+Afișează proprietățile unui fișier GIS cu comanda:
 
 ```sh
 mapshaper alba-uat-poligon.geojson -info
@@ -123,8 +123,6 @@ Tutorial: [Elections Data – Spatial Perspectives in QGIS 3.8.3 – Map The Clo
 ## TODO
 
 - [ ] NodeJS script instead of batch script
-    * [ ] `package.json` to install dependencies
-    * [ ] Unzip source with Zlib
 
 <!-- 
 ```css
